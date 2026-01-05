@@ -5,6 +5,7 @@
   runCommand,
   nix-update-script,
   qbit_manage,
+  nixosTests,
 }:
 python3Packages.buildPythonApplication rec {
   pname = "qbit_manage";
@@ -53,6 +54,8 @@ python3Packages.buildPythonApplication rec {
               || (echo "Version mismatch: $outver" >&2; exit 1)
             touch $out
           '';
+
+      testService = nixosTests.qbit_manage;
     };
   };
 
