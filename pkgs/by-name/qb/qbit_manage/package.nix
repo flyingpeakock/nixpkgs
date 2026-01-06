@@ -12,16 +12,24 @@ python3Packages.buildPythonApplication rec {
   version = "4.6.5";
 
   src = fetchFromGitHub {
-    owner = "StuffAnThings";
+    owner = "flyingpeakock";
     repo = "qbit_manage";
-    hash = "sha256-JCsbf2mPRhs7Mbekl946G/y/CSNSSvQBLvlwVy/Avcg=";
-    tag = "v${version}";
+    hash = "sha256-+tSbPedhdNLyo06l4hxqbaeszCFJ34bnE+Y7ThPDYmA=";
+    # tag = "v${version}";
+    rev = "5e3025c83c654a2d500ddd490005fd89f4c001f7";
   };
 
   pyproject = true;
   build-system = [ python3Packages.setuptools ];
   # pythonRelaxDeps is not relaxing ruamel-yaml version constraint, disable completely instead
-  dontCheckRuntimeDeps = true;
+  # dontCheckRuntimeDeps = true;
+  pythonRelaxDeps = [
+    "fastapi"
+    "gitpython"
+    "humanize"
+    "ruamel.yaml"
+    "uvicorn"
+  ];
 
   dependencies = with python3Packages; [
     argon2-cffi
