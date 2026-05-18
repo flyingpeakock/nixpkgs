@@ -323,9 +323,19 @@ in
     };
 
     systemd = {
-      tmpfiles.settings.qbit-manage."${cfg.dataDir}".d = {
-        inherit (cfg) user group;
-        mode = "0755";
+      tmpfiles.settings.qbit-manage = {
+        "${cfg.dataDir}".d = {
+          inherit (cfg) user group;
+          mode = "0755";
+        };
+        "${cfg.dataDir}/config.yml".f = {
+          inherit (cfg) user group;
+          mode = "0600";
+        };
+        "${cfg.dataDir}/generated.yml"."L+" = lib.mkIf (cfg.config != null) {
+          inherit (cfg) user group;
+          argument = "${createYAMLConfig cfg.config}";
+        };
       };
 
       services."qbit-manage" = {
@@ -333,9 +343,6 @@ in
         enable = true;
         after = [ "network.target" ];
         wantedBy = [ "multi-user.target" ];
-        preStart = mkIf (cfg.config != null) ''
-          install -D -m 600 -o '${cfg.user}' -g '${cfg.group}' '${createYAMLConfig cfg.config}' '${cfg.dataDir}/config.yml'
-        '';
         serviceConfig = {
           Type = "simple";
           User = cfg.user;
